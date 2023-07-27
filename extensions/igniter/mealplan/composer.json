@@ -1,0 +1,23 @@
+{
+  "name": "igniter/mealplan",
+  "type": "tastyigniter-extension",
+  "description": "This extension is to create MealPlan subscription system",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Harry singh",
+      "email": "sam@sampoyigi.com"
+    }
+  ],
+  "extra": {
+    "tastyigniter-extension": {
+      "code": "igniter.mealplan",
+      "name": "MealPlan",
+      "icon": {
+        "class": "fa fa-plug",
+        "backgroundColor": "#000000",
+        "color": "#FFF"
+      }
+    }
+  }
+}
