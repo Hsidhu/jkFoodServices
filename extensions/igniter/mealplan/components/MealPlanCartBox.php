@@ -10,19 +10,29 @@ use Igniter\Local\Facades\Location;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Igniter\MealPlan\Models\MealPlan;
+use Illuminate\Support\Facades\App;
+use Illuminate\Session\SessionManager;
 
 class MealPlanCartBox extends \System\Classes\BaseComponent
 {
     use \Igniter\Local\Traits\SearchesNearby;
     use \Main\Traits\UsesPage;
+    use \Admin\Traits\HasDeliveryAreas;
 
     /**
      * @var \Igniter\MealPlan\Classes\CartManager
      */
     protected $cartManager;
 
+    /**
+     * @var \Igniter\Local\Classes\Location
+     */
+    protected $location;
+
     public function initialize()
     {
+        $this->location = App::make('location');
+
         $this->cartManager = CartManager::instance();
     }
 
@@ -101,6 +111,7 @@ class MealPlanCartBox extends \System\Classes\BaseComponent
         $this->addJs('js/googleAutoFill.js', 'google-auto-file-js');
         // https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initAutocomplete&libraries=places&v=weekly"
 
+        $this->updateCurrentOrderType();
         $this->prepareVars();
     }
 
@@ -116,14 +127,25 @@ class MealPlanCartBox extends \System\Classes\BaseComponent
         $this->page['checkoutEventHandler'] = $this->getEventHandler('onProceedToCheckout');
         $this->page['updateCartItemEventHandler'] = $this->getEventHandler('onUpdateCart');
         $this->page['updateCartItemQtyEventHandler'] = $this->getEventHandler('onUpdateItemQuantity');
-        $this->page['applyCouponEventHandler'] = $this->getEventHandler('onApplyCoupon');
-        $this->page['applyTipEventHandler'] = $this->getEventHandler('onApplyTip');
+
         $this->page['loadCartItemEventHandler'] = $this->getEventHandler('onLoadItemPopup');
         $this->page['removeCartItemEventHandler'] = $this->getEventHandler('onUpdateItemQuantity');
         $this->page['removeConditionEventHandler'] = $this->getEventHandler('onRemoveCondition');
         $this->page['refreshCartEventHandler'] = $this->getEventHandler('onRefresh');
 
-        $this->page['applyDeliveryChargeEventHandler'] = $this->getEventHandler('onApplyDeliveryCharge');
+        $this->page['applyCouponEventHandler'] = $this->getEventHandler('onApplyCoupon');
+        $this->page['applyTipEventHandler'] = $this->getEventHandler('onApplyTip');
+
+        // location variables
+        $this->page['location'] = $this->location;
+        $this->page['locationCurrent'] = $this->location->current();
+
+        // select order
+        $this->page['orderTypeEventHandler'] = $this->getEventHandler('onChangeOrderType');
+        $this->page['locationOrderTypes'] = $this->location->getOrderTypes();
+        $this->page['currentOrderType'] = Location::orderType();
+
+        // search delivery area
         $this->page['searchEventHandler'] = $this->getEventHandler('onSearchNearby');
         $this->page['pickerEventHandler'] = $this->getEventHandler('onSetSavedAddress');
 
@@ -133,6 +155,9 @@ class MealPlanCartBox extends \System\Classes\BaseComponent
         );
 
         $this->page['cart'] = $this->cartManager->getCart();
+
+        //$this->cartManager->removeCondition('delivery');
+        //dd($this->cartManager->getCart());
     }
 
     public function fetchPartials()
@@ -157,6 +182,7 @@ class MealPlanCartBox extends \System\Classes\BaseComponent
         return $this->fetchPartials();
     }
 
+    // Load meal add ons in popup
     public function onLoadItemPopup()
     {
         $menuItem = MealPlan::find(post('menuId'));
@@ -176,6 +202,7 @@ class MealPlanCartBox extends \System\Classes\BaseComponent
         ]);
     }
 
+    // update Item in cart
     public function onUpdateCart()
     {
         try {
@@ -193,6 +220,7 @@ class MealPlanCartBox extends \System\Classes\BaseComponent
         }
     }
 
+    // update quantity
     public function onUpdateItemQuantity()
     {
         try {
@@ -234,6 +262,7 @@ class MealPlanCartBox extends \System\Classes\BaseComponent
         }
     }
 
+    // Move to checkout page
     public function onProceedToCheckout()
     {
         try {
@@ -252,6 +281,7 @@ class MealPlanCartBox extends \System\Classes\BaseComponent
         }
     }
 
+    // Checkout button status
     public function buttonLabel($checkoutComponent = null)
     {
         //if ($this->locationIsClosed())
@@ -274,24 +304,52 @@ class MealPlanCartBox extends \System\Classes\BaseComponent
         return Location::instance()->getId();
     }
 
-    // public function onSearchNearby()
-    // {
-    //     $searchQuery = post('search_query');
-    //     $userLocation = $this->geocodeSearchQuery($searchQuery);
-
-            // 
-    //     Location::searchByCoordinates($userLocation->getCoordinates())
-    //         ->first(function ($location) use ($userLocation) {
-    //             if ($area = $location->searchDeliveryArea($userLocation->getCoordinates())) {   
-    //                 //Location::updateNearbyArea($area);
-    //                 return $area;
-    //             }
-    //     });
-    // }
-
-    public function onApplyDeliveryCharge()
+    protected function updateCurrentOrderType()
     {
-        
+        if (!$this->location->current())
+            return;
+
+        $sessionOrderType = $this->location->getSession('orderType');
+        if ($sessionOrderType && $this->location->hasOrderType($sessionOrderType))
+            return;
+
+        $defaultOrderType = $this->property('defaultOrderType');
+        if (!$this->location->hasOrderType($defaultOrderType)) {
+            $defaultOrderType = optional($this->location->getOrderTypes()->first(function ($orderType) {
+                return !$orderType->isDisabled();
+            }))->getCode();
+        }
+
+        if ($defaultOrderType)
+            $this->location->updateOrderType($defaultOrderType);
+    }
+
+    public function onChangeOrderType()
+    {
+        try {
+            if (!$this->location->current())
+                throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
+
+            $orderType = $this->location->getOrderType(post('type'));
+            if ($orderType->isDisabled())
+                throw new ApplicationException($orderType->getDisabledDescription());
+
+            $this->location->updateOrderType($orderType->getCode());
+
+            if($orderType->getCode() != 'delivery'){
+                $this->cartManager->removeCondition($orderType->getCode());
+            }
+
+            $this->controller->pageCycle();
+
+            return ($redirectUrl = input('redirect'))
+                ? Redirect::to($this->controller->pageUrl($redirectUrl))
+                : Redirect::back();
+        }
+        catch (Exception $ex) {
+            if (Request::ajax()) throw $ex;
+            else flash()->danger($ex->getMessage())->now();
+        }
     }
 
     protected function updateNearbyAreaFromSavedAddress($address)
@@ -384,4 +442,6 @@ class MealPlanCartBox extends \System\Classes\BaseComponent
         return $this->cartManager->cartTotalIsBelowMinimumOrder()
             || $this->cartManager->deliveryChargeIsUnavailable();
     }
+
+   
 }

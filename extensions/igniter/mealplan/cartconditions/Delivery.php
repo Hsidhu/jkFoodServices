@@ -2,7 +2,6 @@
 
 namespace Igniter\MealPlan\CartConditions;
 
-use Admin\Models\Locations_model;
 use Igniter\Flame\Cart\CartCondition;
 use Igniter\Flame\Cart\Facades\Cart;
 use Igniter\Local\Facades\Location;
@@ -14,6 +13,8 @@ class Delivery extends CartCondition
     protected $deliveryCharge = 0;
 
     protected $minimumOrder = 0;
+
+    public $removeable = true;
 
     public function beforeApply()
     {

@@ -89,7 +89,7 @@ abstract class AbstractArea extends Model implements AreaInterface
         $vertices = array_map(function ($coordinates) use ($geolite) {
             return $geolite->coordinates($coordinates->lat, $coordinates->lng);
         }, $this->vertices);
-//dd($vertices);
+
         return $geolite->polygon($vertices);
     }
 
@@ -125,7 +125,7 @@ abstract class AbstractArea extends Model implements AreaInterface
     // search area
     public function checkBoundary($coordinate)
     {
-        //var_dump($coordinate);
+        //dd($this->vertices);
         if (!$coordinate instanceof CoordinatesInterface) {
             throw new InvalidArgumentException(sprintf(
                 'Invalid class "%s" given, expected: %s',

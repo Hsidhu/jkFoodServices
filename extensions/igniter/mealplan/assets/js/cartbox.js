@@ -157,4 +157,47 @@
         $('[data-control="cart-box"]').cartBox()
     })
 
+
+    // delivery type
+    $(document)
+        // .on('click', '[data-control="search-local"]', function () {
+        //     $(this).closest('form').submit()
+        // })
+        .on('change', '[data-control="order-type-toggle"] input[type="radio"]', function (event) {
+            var $input = $(event.currentTarget),
+                $el = $input.closest('[data-control="order-type-toggle"]')
+
+            $el.find('input[type="radio"]').attr('disabled', true)
+            $el.find('.btn').addClass('disabled')
+            $.request($el.data('handler'), {
+                data: {'type': $input.val(), 'redirect': $el.data('redirect')}
+            }).always(function () {
+                $el.find('input[type="radio"]').attr('disabled', false)
+                $el.find('.btn').removeClass('disabled')
+            })
+        })
+        .on('click', '[data-control="order-type-toggle"] [data-order-type-code]', function (event) {
+            var $btn = $(event.currentTarget),
+                $el = $btn.closest('[data-control="order-type-toggle"]')
+
+            $el.find('[data-bs-toggle="dropdown"]').attr('disabled', true)
+            $el.find('.dropdown-item').addClass('disabled')
+            $.request($el.data('handler'), {
+                data: {'type': $btn.data('orderTypeCode'), 'redirect': $el.data('redirect')}
+            }).always(function () {
+                $el.find('.dropdown-item').removeClass('disabled')
+            })
+        })
+
+        $(document).on('change', 'input[type="radio"][data-page-url]', function (event) {
+            var $input = $(event.currentTarget),
+                pageUrl = $input.data('pageUrl')
+
+            window.location.href = pageUrl+$input.attr('name')+'='+$input.val()
+        })
+
+
 }(window.jQuery)
+
+
+

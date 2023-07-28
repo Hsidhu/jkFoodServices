@@ -2,10 +2,7 @@
 
 namespace Igniter\MealPlan\Classes;
 
-use Admin\Models\Menu_item_option_values_model;
-use Admin\Models\Menu_item_options_model;
 use Igniter\Cart\Models\CartSettings;
-use Igniter\Cart\Models\Menus_model;
 use Igniter\Coupons\Models\Coupons_model;
 use Igniter\Flame\Cart\CartCondition;
 use Igniter\Flame\Cart\CartItem;

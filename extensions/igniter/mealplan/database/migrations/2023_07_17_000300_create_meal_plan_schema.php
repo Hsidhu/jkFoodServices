@@ -73,6 +73,8 @@ class CreateMealPlanSchema extends Migration
             $table->string('recurring_every', 30)->nullable();
             $table->string('ip_address', 40);
             $table->string('user_agent');
+            $table->string('payment', 35);
+            $table->string('order_type', 32);
             $table->text('cart');
             $table->integer('invoice_no');
             $table->string('invoice_prefix', 32);

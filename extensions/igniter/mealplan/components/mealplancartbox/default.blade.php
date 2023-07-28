@@ -14,10 +14,21 @@
             @partial('@items')
         </div>
 
-        <div id="cart-tip">
+        <div id="order-type">
             <!-- @component('localSearch') -->
-            @partial('@delivery_charge')
+            @partial('@order_type')
         </div>
+        <?php
+            if($currentOrderType === 'delivery')
+            {
+            ?>
+            <div id="cart-tip">
+                <!-- @component('localSearch') -->
+                @partial('@delivery_charge')
+            </div>
+            <?php
+            }
+        ?>
 
         <div id="cart-totals">
             @partial('@totals')

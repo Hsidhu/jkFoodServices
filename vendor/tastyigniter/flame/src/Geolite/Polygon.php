@@ -180,6 +180,7 @@ class Polygon implements PolygonInterface, \Countable, \IteratorAggregate, \Arra
      */
     public function pointInPolygon(Contracts\CoordinatesInterface $coordinate)
     {
+        //dd($this->bounds->pointInBounds($coordinate), $this->pointOnVertex($coordinate), $this->pointOnBoundary($coordinate), $this->pointIsInside($coordinate));
         if ($this->isEmpty())
             return false;
 

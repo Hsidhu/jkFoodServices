@@ -109,4 +109,9 @@
   'Igniter\\Frontend\\Models\\Menus_model' => 'extensions/igniter/frontend/models/Menus_model.php',
   'Igniter\\Local\\Classes\\CoveredAreaCondition' => 'extensions/igniter/local/classes/CoveredAreaCondition.php',
   'Igniter\\MealPlan\\CartConditions\\Delivery' => 'extensions/igniter/mealplan/cartconditions/Delivery.php',
+  'Igniter\\Local\\Components\\Info' => 'extensions/igniter/local/components/Info.php',
+  'Igniter\\Cart\\Components\\Order' => 'extensions/igniter/cart/components/Order.php',
+  'Igniter\\Local\\Components\\Review' => 'extensions/igniter/local/components/Review.php',
+  'Igniter\\Cart\\Models\\Cart' => 'extensions/igniter/cart/models/Cart.php',
+  'Igniter\\PayRegister\\FormWidgets\\PaymentAttempts' => 'extensions/igniter/payregister/formwidgets/PaymentAttempts.php',
 );

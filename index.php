@@ -1,6 +1,7 @@
 <?php
 
 /**
+ * /Applications/MAMP/bin/php/php8.0.8/bin/php artisan --version
  * TastyIgniter - An online ordering and restaurant management system
  *
  * @package  TastyIgniter

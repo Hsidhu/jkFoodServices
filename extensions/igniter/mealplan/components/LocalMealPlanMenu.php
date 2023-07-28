@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Request;
 use Igniter\MealPlan\Models\MealPlan;
 use Igniter\MealPlan\Models\MealPlanAddon;
 use Igniter\MealPlan\Models\MealPlanOptions;
+use Igniter\MealPlan\Classes\CartManager;
+use Igniter\Flame\Cart\Facades\Cart;
 
 // https://tastyigniter.com/docs/extend/building-components
 
@@ -17,6 +19,11 @@ class LocalMealPlanMenu extends \System\Classes\BaseComponent
     use \Main\Traits\UsesPage;
 
     protected $menuListCategories = [];
+
+    public function initialize()
+    {
+        //$this->cartManager = CartManager::instance();
+    }
 
     public function defineProperties()
     {
@@ -63,6 +70,7 @@ class LocalMealPlanMenu extends \System\Classes\BaseComponent
         $this->page['menuImageWidth'] = $this->property('menuImageWidth');
         $this->page['menuImageHeight'] = $this->property('menuImageHeight');
         $this->page['menuList'] = $this->loadList();
+        $this->page['cartCount'] = Cart::count();
     }
 
     protected function loadList()
@@ -103,4 +111,5 @@ class LocalMealPlanMenu extends \System\Classes\BaseComponent
 
         return $object;
     }
+
 }

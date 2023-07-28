@@ -25,6 +25,11 @@ class Extension extends BaseExtension
      */
     public function register()
     {
+        $this->app->singleton('location', Location::class);
+
+        $aliasLoader = AliasLoader::getInstance();
+        $aliasLoader->alias('Location', Facades\Location::class);
+        
         // $this->app->register(\Igniter\Flame\Cart\CartServiceProvider::class);
         // AliasLoader::getInstance()->alias('Cart', \Igniter\Flame\Cart\Facades\Cart::class);
     }
