@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Igniter\MealPlan\Models\MealPlan;
 use Illuminate\Support\Facades\App;
-use Illuminate\Session\SessionManager;
 
 class MealPlanCartBox extends \System\Classes\BaseComponent
 {
@@ -32,7 +31,6 @@ class MealPlanCartBox extends \System\Classes\BaseComponent
     public function initialize()
     {
         $this->location = App::make('location');
-
         $this->cartManager = CartManager::instance();
     }
 
@@ -269,6 +267,10 @@ class MealPlanCartBox extends \System\Classes\BaseComponent
             if (!is_numeric($id = post('locationId')) || !($location = Location::getById($id)) || !$location->location_status)
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
 
+                //dd(Location::coveredArea()->area_id == 1, empty(Location::coveredArea()->area_id));
+            //if($this->location->getOrderType()->getCode() == 'delivery' && empty(Location::coveredArea()->area_id))
+                //throw new ApplicationException("Please enter delivery address!");
+
             Location::setCurrent($location);
 
             $redirectUrl = $this->controller->pageUrl($this->property('checkoutPage'));
@@ -283,10 +285,11 @@ class MealPlanCartBox extends \System\Classes\BaseComponent
 
     // Checkout button status
     public function buttonLabel($checkoutComponent = null)
-    {
-        //if ($this->locationIsClosed())
-            //return lang('igniter.cart::default.text_is_closed');
-
+    {   
+        if($this->location->getOrderType()->getCode() == 'delivery' && empty(Location::coveredArea()->area_id)){
+            //return "Delivery area required";
+        }
+        
         if (!$this->property('pageIsCheckout') && $this->cartManager->getCart()->count())
             return lang('igniter.cart::default.button_order').' · '.currency_format($this->cartManager->getCart()->total());
 
@@ -335,10 +338,6 @@ class MealPlanCartBox extends \System\Classes\BaseComponent
                 throw new ApplicationException($orderType->getDisabledDescription());
 
             $this->location->updateOrderType($orderType->getCode());
-
-            if($orderType->getCode() != 'delivery'){
-                $this->cartManager->removeCondition($orderType->getCode());
-            }
 
             $this->controller->pageCycle();
 

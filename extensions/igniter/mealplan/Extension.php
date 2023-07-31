@@ -51,11 +51,6 @@ class Extension extends BaseExtension
     public function registerCartConditions()
     {
          return [
-        //     \Igniter\Cart\CartConditions\Tax::class => [
-        //         'name' => 'tax',
-        //         'label' => 'lang:igniter.cart::default.text_vat',
-        //         'description' => 'lang:igniter.cart::default.help_tax_condition',
-        //     ],
             \Igniter\MealPlan\CartConditions\Delivery::class => [
                 'name' => 'delivery',
                 'label' => 'lang:igniter.local::default.text_delivery',

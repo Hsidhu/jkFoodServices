@@ -18,7 +18,6 @@ let postalField;
 
 function initAutocomplete() {
 
-    console.log('asdf');
   address1Field = document.querySelector("#search-query");
   address2Field = document.querySelector("#address2");
   postalField = document.querySelector("#postcode");

@@ -56,7 +56,7 @@ class MealPlanCheckout extends BaseComponent
             'showAddress2Field' => [
                 'label' => 'Whether to display the address 2 form field',
                 'type' => 'switch',
-                'default' => true,
+                'default' => false,
                 'validationRule' => 'required|boolean',
             ],
             'showCityField' => [
@@ -74,7 +74,7 @@ class MealPlanCheckout extends BaseComponent
             'showPostcodeField' => [
                 'label' => 'Whether to display the postcode form field',
                 'type' => 'switch',
-                'default' => false,
+                'default' => true,
                 'validationRule' => 'required|boolean',
             ],
             'showCountryField' => [
@@ -247,8 +247,10 @@ class MealPlanCheckout extends BaseComponent
         $data['cancelPage'] = $this->property('redirectPage');
         $data['successPage'] = $this->property('successPage');
 
+        // Added address for existing or from request field
         $data = $this->processDeliveryAddress($data);
 
+        // check content and location validation
         $this->validateCheckoutSecurity();
 
         return rescue(function () use ($data) {
@@ -404,6 +406,7 @@ class MealPlanCheckout extends BaseComponent
         if (!$order->isPaymentProcessed())
             return false;
 
+        // instead of success page .. go to customer login page
         $redirectUrl = $order->getUrl($this->property('successPage'));
         if ($this->isCheckoutSuccessPage())
             $redirectUrl = $this->controller->pageUrl($this->property('redirectPage'));
@@ -440,4 +443,16 @@ class MealPlanCheckout extends BaseComponent
 
         return $this->checkoutStep === 'pay';
     }
+
+    // login as customer
+    public function onImpersonate()
+    {
+        $customer_id = post('customer_id');
+        if ($customer = $this->formFindModelObject((int)$customer_id)) {
+            Auth::stopImpersonate();
+            Auth::impersonate($customer);
+            flash()->success(sprintf(lang('admin::lang.customers.alert_impersonate_success'), $customer->full_name));
+        }
+    }
+
 }

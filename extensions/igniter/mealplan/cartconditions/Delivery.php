@@ -5,6 +5,7 @@ namespace Igniter\MealPlan\CartConditions;
 use Igniter\Flame\Cart\CartCondition;
 use Igniter\Flame\Cart\Facades\Cart;
 use Igniter\Local\Facades\Location;
+use Admin\Models\Locations_model;
 
 class Delivery extends CartCondition
 {
@@ -14,10 +15,12 @@ class Delivery extends CartCondition
 
     protected $minimumOrder = 0;
 
-    public $removeable = true;
-
     public function beforeApply()
     {
+        // Do not apply condition when orderType is not delivery
+        if (Location::orderType() != Locations_model::DELIVERY)
+            return false;
+        
         $cartSubtotal = Cart::subtotal();
         $this->deliveryCharge = Location::coveredArea()->deliveryAmount($cartSubtotal);
     }

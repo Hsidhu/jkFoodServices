@@ -15,15 +15,13 @@
         </div>
 
         <div id="order-type">
-            <!-- @component('localSearch') -->
             @partial('@order_type')
         </div>
         <?php
-            if($currentOrderType === 'delivery')
+            if($location->getOrderType()->getCode() == 'delivery' && !$pageIsCheckout)
             {
             ?>
-            <div id="cart-tip">
-                <!-- @component('localSearch') -->
+            <div id="delivery-location">
                 @partial('@delivery_charge')
             </div>
             <?php

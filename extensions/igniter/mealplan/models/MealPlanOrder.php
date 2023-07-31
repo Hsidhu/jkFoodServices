@@ -7,11 +7,17 @@ use Igniter\Flame\Database\Model;
 use Igniter\Flame\Auth\Models\User;
 use Admin\Traits\HasInvoice;
 use System\Traits\SendsMailTemplate;
+use Igniter\MealPlan\Traits\LogsStatusHistory;
+use Igniter\MealPlan\Traits\ManagesOrderItems;
 
 class MealPlanOrder extends Model
 {
-
     use HasInvoice, SendsMailTemplate;
+    use ManagesOrderItems, LogsStatusHistory;
+
+    const DELIVERY = 'delivery';
+
+    const COLLECTION = 'collection';
 
     public $status = [
         'received',
@@ -125,5 +131,50 @@ class MealPlanOrder extends Model
         $this->fireEvent('model.extendListFrontEndQuery', [$query]);
 
         return $query->paginate($pageLimit, $page);
+    }
+
+    /**
+     * Get customer address
+     */
+    public function listCustomerAddresses()
+    {
+        if (!$this->customer)
+            return [];
+
+        return $this->customer->addresses()->get();
+    }
+
+
+    public function getOrderDatetimeAttribute($value)
+    {
+        if (!isset($this->attributes['order_date'])
+            && !isset($this->attributes['order_time'])
+        ) return null;
+
+        return make_carbon($this->attributes['order_date'])
+            ->setTimeFromTimeString($this->attributes['order_time']);
+    }
+
+    public function isCompleted()
+    {
+        if (!$this->isPaymentProcessed())
+            return false;
+
+        return $this->hasStatus(setting('completed_order_status'));
+    }
+
+    public function isPaymentProcessed()
+    {
+        return $this->processed && !empty($this->status_id);
+    }
+
+    public function isDeliveryType()
+    {
+        return $this->order_type == static::DELIVERY;
+    }
+
+    public function isCollectionType()
+    {
+        return $this->order_type == static::COLLECTION;
     }
 }

@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Request;
 use Main\Facades\Auth;
 use System\Traits\SessionMaker;
+use Igniter\MealPlan\Models\MealPlanOrder;
 
 class OrderManager
 {
@@ -75,11 +76,11 @@ class OrderManager
             ? $this->customer->customer_id
             : null;
 
-        $order = Orders_model::find($id);
+        $order = MealPlanOrder::find($id);
 
         // Only users can view their own orders
         if (!$order || $order->customer_id != $customerId)
-            $order = Orders_model::make($this->getCustomerAttributes());
+            $order = MealPlanOrder::make($this->getCustomerAttributes());
 
         return $order;
     }
@@ -249,7 +250,7 @@ class OrderManager
         $order->location_id = $this->location->current()->getKey();
         $order->order_type = $this->location->orderType();
 
-        $this->applyOrderDateTime($order);
+        //$this->applyOrderDateTime($order);
 
         $order->total_items = $this->cart->count();
         $order->cart = $this->cart->content();

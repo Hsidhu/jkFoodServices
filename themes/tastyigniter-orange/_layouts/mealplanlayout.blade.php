@@ -43,8 +43,6 @@ description: 'Local layout'
 
                     <div class="col-lg-8">
                         <div class="content">
-                            <!-- @partial('localBox::container') -->
-
                             @page
                         </div>
                     </div>

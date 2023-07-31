@@ -114,4 +114,8 @@
   'Igniter\\Local\\Components\\Review' => 'extensions/igniter/local/components/Review.php',
   'Igniter\\Cart\\Models\\Cart' => 'extensions/igniter/cart/models/Cart.php',
   'Igniter\\PayRegister\\FormWidgets\\PaymentAttempts' => 'extensions/igniter/payregister/formwidgets/PaymentAttempts.php',
+  'Igniter\\MealPlan\\Requests\\MealPlan' => 'extensions/igniter/mealplan/requests/MealPlan.php',
+  'Igniter\\MealPlan\\Models\\MealPlanOrder' => 'extensions/igniter/mealplan/models/MealPlanOrder.php',
+  'Igniter\\MealPlan\\Traits\\ManagesOrderItems' => 'extensions/igniter/mealplan/traits/ManagesOrderItems.php',
+  'Igniter\\MealPlan\\Traits\\LogsStatusHistory' => 'extensions/igniter/mealplan/traits/LogsStatusHistory.php',
 );
