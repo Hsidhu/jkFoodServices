@@ -4,6 +4,7 @@ namespace Igniter\MealPlan\Classes;
 
 use Admin\Models\Addresses_model;
 use Admin\Models\Customers_model;
+use Igniter\MealPlan\Models\MealPlanOrder;
 use Admin\Models\Orders_model;
 use Igniter\Flame\Cart\CartCondition;
 use Igniter\Flame\Exception\ApplicationException;
@@ -14,7 +15,6 @@ use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Request;
 use Main\Facades\Auth;
 use System\Traits\SessionMaker;
-use Igniter\MealPlan\Models\MealPlanOrder;
 
 class OrderManager
 {
@@ -66,7 +66,7 @@ class OrderManager
     }
 
     /**
-     * @return \Admin\Models\Orders_model
+     * @return \Admin\Models\MealPlanOrder
      */
     public function loadOrder()
     {
@@ -88,11 +88,11 @@ class OrderManager
     /**
      * @param $hash
      * @param \Admin\Models\Customers_model|null $customer
-     * @return \Admin\Models\Orders_model|\Illuminate\Database\Eloquent\Model|object|null
+     * @return \Igniter\MealPlan\Models\MealPlanOrder|\Illuminate\Database\Eloquent\Model|object|null
      */
     public function getOrderByHash($hash, $customer = null)
     {
-        $query = Orders_model::whereHash($hash);
+        $query = MealPlanOrder::whereHash($hash);
 
         if (!is_null($customer))
             $query->where('customer_id', $customer->getKey());
@@ -167,10 +167,10 @@ class OrderManager
     }
 
     /**
-     * @param $order \Admin\Models\Orders_model
+     * @param $order \Igniter\MealPlan\Models\MealPlanOrder
      * @param $data
      *
-     * @return \Admin\Models\Orders_model
+     * @return \Igniter\MealPlan\Models\MealPlanOrder
      */
     public function saveOrder($order, array $data)
     {
@@ -309,7 +309,7 @@ class OrderManager
     }
 
     /**
-     * @param \Admin\Models\Orders_model $order
+     * @param \Igniter\MealPlan\Models\MealPlanOrder $order
      * @return bool
      */
     protected function processPaymentLessForm($order)

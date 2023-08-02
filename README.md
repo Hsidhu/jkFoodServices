@@ -31,3 +31,7 @@ If you discover a security vulnerability within TastyIgniter, please send an e-m
 ## License
 Starting with version 3.0.0 TastyIgniter is licensed under the [The MIT License (MIT)](https://tastyigniter.com/license/). Older versions were GPL-licensed.
 
+
+curl -X POST --data "username=admin&password=123456789&device_name=my_device" http://mytasty.local/api/token
+{"status_code":201,"token":"1|jw1qy04xYH90nNHaDFOJOkiMjuGFzujGBO46EuKzAD3cUtuIbtsbFlabBjDUeAh6TqKye8AHV6WhHZhQ"}
+

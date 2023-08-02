@@ -233,16 +233,16 @@ trait ManagesOrderItems
 
     public function orderMenusQuery()
     {
-        return DB::table('order_menus');
+        return DB::table('meal_plan_order_items');
     }
 
     public function orderMenuOptionsQuery()
     {
-        return DB::table('order_menu_options');
+        return DB::table('meal_plan_order_item_options');
     }
 
     public function orderTotalsQuery()
     {
-        return DB::table('order_totals');
+        return DB::table('meal_plan_order_totals');
     }
 }

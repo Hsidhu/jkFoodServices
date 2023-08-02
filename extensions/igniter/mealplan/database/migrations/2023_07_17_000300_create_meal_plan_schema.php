@@ -58,46 +58,70 @@ class CreateMealPlanSchema extends Migration
             $table->timestamps();
         });
 
+
         Schema::create('meal_plan_orders', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
-            $table->string('hash', 40)->nullable()->index();
-            $table->integer('meal_plan_id');
             $table->integer('customer_id');
-            $table->string('note', 164);
-            $table->decimal('delivery_charge', 10, 2);
-            $table->decimal('total_price', 10, 2);
-            $table->date('period_start_date')->nullable();
-            $table->date('period_end_date')->nullable();
-            $table->boolean('recurring')->nullable();
-            $table->string('recurring_every', 30)->nullable();
-            $table->string('ip_address', 40);
-            $table->string('user_agent');
+            $table->string('first_name', 32);
+            $table->string('last_name', 32);
+            $table->string('email', 96);
+            $table->string('telephone', 32);
+            $table->integer('location_id');
+            $table->integer('address_id');
+            $table->text('cart');
+            $table->integer('total_items');
+            $table->text('comment');
             $table->string('payment', 35);
             $table->string('order_type', 32);
-            $table->text('cart');
+            $table->dateTime('date_added');
+            $table->date('date_modified');
+            $table->time('order_time');
+            $table->date('order_date');
+            $table->decimal('order_total', 15, 4)->nullable();
+            $table->integer('status_id');
+            $table->string('ip_address', 40);
+            $table->string('user_agent');
+            $table->boolean('notify');
+            $table->integer('assignee_id');
             $table->integer('invoice_no');
             $table->string('invoice_prefix', 32);
             $table->dateTime('invoice_date');
-            $table->text('staff_comment')->nullable();
-            $table->text('customer_comment')->nullable();
-            $table->date('cancelled_date')->nullable();
-            $table->string('status');
-            $table->timestamps();
         });
-
-        Schema::create('meal_plan_order_options', function (Blueprint $table) {
-            $table->engine = 'InnoDB';
+    
+        // will have meal plan item id
+        Schema::create('meal_plan_order_items', function (Blueprint $table) {
             $table->id();
-            $table->integer('meal_plan_order_id');
-            $table->integer('meal_plan_addon_id');
-            $table->integer('meal_plan_option_id');
-            $table->integer('meal_plan_option_value_id');
+            $table->integer('order_id');
+            $table->integer('meal_plan_id');
             $table->string('name');
-            $table->text('metadata');
-            $table->decimal('total_price', 10, 2);
-            $table->integer('quantity')->default(1);
-            $table->timestamps();
+            $table->integer('quantity');
+            $table->decimal('price', 15, 4)->nullable();
+            $table->decimal('subtotal', 15, 4)->nullable();
+            $table->text('option_values');
+            $table->text('comment');
+        });
+        // will have meal plan item options
+        Schema::create('meal_plan_order_item_options', function (Blueprint $table) {
+            $table->id();
+            $table->integer('order_id');
+            $table->integer('meal_plan_id');
+            $table->string('order_option_name', 128);
+            $table->decimal('order_option_price', 15, 4)->nullable();
+            $table->integer('meal_plan_order_id');
+            $table->integer('meal_plan_order_option_id');
+            $table->integer('meal_plan_option_value_id');
+        });
+        
+        // order total with delivery an taxes
+        Schema::create('meal_plan_order_totals', function (Blueprint $table) {
+                $table->engine = 'InnoDB';
+                $table->id();
+                $table->integer('order_id');
+                $table->string('code', 30);
+                $table->string('title');
+                $table->decimal('value', 15);
+                $table->boolean('priority');
         });
 
         Schema::create('meal_plan_order_transactions', function (Blueprint $table) {
@@ -149,8 +173,12 @@ class CreateMealPlanSchema extends Migration
         Schema::dropIfExists('meal_plan_options');
         Schema::dropIfExists('meal_plan_option_values');
         Schema::dropIfExists('meal_plan_addons');
+        
         Schema::dropIfExists('meal_plan_orders');
-        Schema::dropIfExists('meal_plan_order_options');
+        Schema::dropIfExists('meal_plan_order_items');
+        Schema::dropIfExists('meal_plan_order_item_options');
+        Schema::dropIfExists('meal_plan_order_totals');
+
         Schema::dropIfExists('meal_plan_order_transactions');
         Schema::dropIfExists('driver_zones');
         Schema::dropIfExists('customer_zones');

@@ -7,7 +7,7 @@ use Igniter\Flame\Database\Attach\HasMedia;
 use Igniter\Flame\Database\Model;
 use Igniter\MealPlan\Models\MealPlanOption;
 
-class MealPlanOrderOption extends Model
+class MealPlanOrderItemOption extends Model
 {
     use HasMedia;
 

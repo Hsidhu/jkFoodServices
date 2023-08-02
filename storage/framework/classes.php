@@ -118,4 +118,12 @@
   'Igniter\\MealPlan\\Models\\MealPlanOrder' => 'extensions/igniter/mealplan/models/MealPlanOrder.php',
   'Igniter\\MealPlan\\Traits\\ManagesOrderItems' => 'extensions/igniter/mealplan/traits/ManagesOrderItems.php',
   'Igniter\\MealPlan\\Traits\\LogsStatusHistory' => 'extensions/igniter/mealplan/traits/LogsStatusHistory.php',
+  'Igniter\\PayRegister\\Traits\\PaymentHelpers' => 'extensions/igniter/payregister/traits/PaymentHelpers.php',
+  'Igniter\\PayRegister\\Payments\\PaypalExpress' => 'extensions/igniter/payregister/payments/PaypalExpress.php',
+  'Igniter\\PayRegister\\Payments\\AuthorizeNetAim' => 'extensions/igniter/payregister/payments/AuthorizeNetAim.php',
+  'Igniter\\PayRegister\\Payments\\Stripe' => 'extensions/igniter/payregister/payments/Stripe.php',
+  'Igniter\\PayRegister\\Payments\\Mollie' => 'extensions/igniter/payregister/payments/Mollie.php',
+  'Igniter\\PayRegister\\Payments\\Square' => 'extensions/igniter/payregister/payments/Square.php',
+  'igniter\\api\\Controllers\\resources' => 'extensions/igniter/api/controllers/resources.php',
+  'Igniter\\Api\\Models\\Token' => 'extensions/igniter/api/models/Token.php',
 );
