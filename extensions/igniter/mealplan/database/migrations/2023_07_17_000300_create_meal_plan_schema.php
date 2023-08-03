@@ -62,13 +62,14 @@ class CreateMealPlanSchema extends Migration
         Schema::create('meal_plan_orders', function (Blueprint $table) {
             $table->engine = 'InnoDB';
             $table->id();
-            $table->integer('customer_id');
+            $table->string('hash', 40)->nullable()->index();
+            $table->integer('customer_id')->nullable();
             $table->string('first_name', 32);
             $table->string('last_name', 32);
             $table->string('email', 96);
             $table->string('telephone', 32);
             $table->integer('location_id');
-            $table->integer('address_id');
+            $table->integer('address_id')->nullable();
             $table->text('cart');
             $table->integer('total_items');
             $table->text('comment');
@@ -87,6 +88,9 @@ class CreateMealPlanSchema extends Migration
             $table->integer('invoice_no');
             $table->string('invoice_prefix', 32);
             $table->dateTime('invoice_date');
+            $table->boolean('processed')->nullable();
+            $table->text('delivery_comment')->nullable();
+            $table->timestamps();
         });
     
         // will have meal plan item id
@@ -104,13 +108,14 @@ class CreateMealPlanSchema extends Migration
         // will have meal plan item options
         Schema::create('meal_plan_order_item_options', function (Blueprint $table) {
             $table->id();
+            $table->integer('meal_plan_order_item_id');
             $table->integer('order_id');
             $table->integer('meal_plan_id');
-            $table->string('order_option_name', 128);
-            $table->decimal('order_option_price', 15, 4)->nullable();
-            $table->integer('meal_plan_order_id');
             $table->integer('meal_plan_order_option_id');
             $table->integer('meal_plan_option_value_id');
+            $table->string('order_option_name', 128);
+            $table->decimal('order_option_price', 15, 4)->nullable();
+            $table->integer('quantity');
         });
         
         // order total with delivery an taxes
@@ -122,6 +127,7 @@ class CreateMealPlanSchema extends Migration
                 $table->string('title');
                 $table->decimal('value', 15);
                 $table->boolean('priority');
+                $table->boolean('is_summable')->default(0);
         });
 
         Schema::create('meal_plan_order_transactions', function (Blueprint $table) {

@@ -5,7 +5,6 @@ namespace Igniter\MealPlan\Classes;
 use Admin\Models\Addresses_model;
 use Admin\Models\Customers_model;
 use Igniter\MealPlan\Models\MealPlanOrder;
-use Admin\Models\Orders_model;
 use Igniter\Flame\Cart\CartCondition;
 use Igniter\Flame\Exception\ApplicationException;
 use Igniter\Flame\Traits\Singleton;

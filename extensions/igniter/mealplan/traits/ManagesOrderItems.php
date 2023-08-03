@@ -121,9 +121,9 @@ trait ManagesOrderItems
         foreach ($content as $rowId => $cartItem) {
             if ($rowId != $cartItem->rowId) continue;
 
-            $orderMenuId = $this->orderMenusQuery()->insertGetId([
+            $orderItemId = $this->orderMenusQuery()->insertGetId([
                 'order_id' => $orderId,
-                'menu_id' => $cartItem->id,
+                'meal_plan_id' => $cartItem->id,
                 'name' => $cartItem->name,
                 'quantity' => $cartItem->qty,
                 'price' => $cartItem->price,
@@ -132,8 +132,8 @@ trait ManagesOrderItems
                 'option_values' => serialize($cartItem->options),
             ]);
 
-            if ($orderMenuId && count($cartItem->options)) {
-                $this->addOrderMenuOptions($orderMenuId, $cartItem->id, $cartItem->options);
+            if ($orderItemId && count($cartItem->options)) {
+                $this->addOrderMenuOptions($orderItemId, $cartItem->id, $cartItem->options);
             }
         }
     }
@@ -148,7 +148,7 @@ trait ManagesOrderItems
      *
      * @return bool
      */
-    protected function addOrderMenuOptions($orderMenuId, $menuId, $options)
+    protected function addOrderMenuOptions($orderMenuId, $mealPlanID, $options)
     {
         $orderId = $this->getKey();
         if (!is_numeric($orderId))
@@ -157,13 +157,14 @@ trait ManagesOrderItems
         foreach ($options as $option) {
             foreach ($option->values as $value) {
                 $this->orderMenuOptionsQuery()->insert([
-                    'order_menu_id' => $orderMenuId,
+                    'meal_plan_order_item_id' => $orderMenuId,
                     'order_id' => $orderId,
-                    'menu_id' => $menuId,
-                    'order_menu_option_id' => $option->id,
-                    'menu_option_value_id' => $value->id,
-                    'order_option_name' => $value->name,
-                    'order_option_price' => $value->price,
+                    'meal_plan_id' => $mealPlanID,
+                    'meal_plan_order_option_id' => $option->id,
+                    'order_option_name' => $option->name,
+                    'meal_plan_option_value_id' => $value->id,
+                    'order_option_value_name' => $value->name,
+                    'order_option_value_price' => $value->price,
                     'quantity' => $value->qty,
                 ]);
             }
@@ -225,7 +226,7 @@ trait ManagesOrderItems
             ->where('code', 'total')
             ->update(['value' => $orderTotal]);
 
-        $this->newQuery()->where('order_id', $this->getKey())->update([
+        $this->newQuery()->where('id', $this->getKey())->update([
             'total_items' => $totalItems,
             'order_total' => $orderTotal,
         ]);

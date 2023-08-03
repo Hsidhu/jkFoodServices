@@ -6,7 +6,7 @@ use Admin\Traits\Assignable;
 use Admin\Traits\HasInvoice;
 use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
-use Admin\Traits\ManagesOrderItems;
+use Igniter\MealPlan\Traits\ManagesOrderItems;
 use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User;
 use Igniter\Flame\Database\Casts\Serialize;
@@ -301,9 +301,9 @@ class MealPlanOrder extends Model
     {
         $id = $id ?: $this->status_id ?: setting('default_order_status');
 
-        return $this->addStatusHistory(
-            Statuses_model::find($id), $options
-        );
+        // return $this->addStatusHistory(
+        //     Statuses_model::find($id), $options
+        // );
     }
 
     /**
