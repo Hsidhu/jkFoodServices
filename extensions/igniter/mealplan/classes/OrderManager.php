@@ -210,7 +210,7 @@ class OrderManager
 
     public function processPayment($order, array $data)
     {
-        Event::fire('igniter.checkout.beforePayment', [$order, $data]);
+       // Event::fire('igniter.checkout.beforePayment', [$order, $data]);
 
         if (!strlen($order->payment) && $this->processPaymentLessForm($order))
             return true;

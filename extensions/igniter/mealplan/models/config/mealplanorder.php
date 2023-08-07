@@ -1,56 +1,70 @@
 <?php
+
 $config['list']['filter'] = [
     'search' => [
-        'prompt' => 'Search by Meal Plan Order',
+        'prompt' => 'lang:admin::lang.orders.text_filter_search',
         'mode' => 'all',
     ],
     'scopes' => [
+        'assignee' => [
+            'label' => 'lang:admin::lang.orders.text_filter_assignee',
+            'type' => 'select',
+            'scope' => 'filterAssignedTo',
+            'options' => [
+                1 => 'lang:admin::lang.statuses.text_unassigned',
+                2 => 'lang:admin::lang.statuses.text_assigned_to_self',
+                3 => 'lang:admin::lang.statuses.text_assigned_to_others',
+            ],
+        ],
+        'location' => [
+            'label' => 'lang:admin::lang.text_filter_location',
+            'type' => 'selectlist',
+            'scope' => 'whereHasLocation',
+            'modelClass' => 'Admin\Models\Locations_model',
+            'nameFrom' => 'location_name',
+            'locationAware' => true,
+        ],
         'status' => [
             'label' => 'lang:admin::lang.text_filter_status',
-            'type' => 'switch',
-            'conditions' => 'status = :filtered',
+            'type' => 'selectlist',
+            'mode' => 'radio',
+            'conditions' => 'status_id IN(:filtered)',
+            'modelClass' => 'Admin\Models\Statuses_model',
+            'options' => 'getDropdownOptionsForOrder',
         ],
-        'created_at' => [
+        'type' => [
+            'label' => 'lang:admin::lang.orders.text_filter_order_type',
+            'type' => 'select',
+            'conditions' => 'order_type = :filtered',
+            'modelClass' => 'Admin\Models\Locations_model',
+            'options' => 'getOrderTypeOptions',
+        ],
+        'payment' => [
+            'label' => 'lang:admin::lang.orders.text_filter_payment',
+            'type' => 'selectlist',
+            'conditions' => 'payment IN(:filtered)',
+            'modelClass' => 'Admin\Models\Payments_model',
+            'options' => 'getDropdownOptions',
+        ],
+        'date' => [
             'label' => 'lang:admin::lang.text_filter_date',
             'type' => 'daterange',
-            'conditions' => 'created_at >= CAST(:filtered_start AS DATE) AND created_at <= CAST(:filtered_end AS DATE)',
+            'conditions' => 'order_date >= CAST(:filtered_start AS DATE) AND order_date <= CAST(:filtered_end AS DATE)',
         ],
     ],
 ];
 
 $config['list']['toolbar'] = [
     'buttons' => [
-        'create' => [
-            'label' => 'lang:admin::lang.button_new',
-            'class' => 'btn btn-primary',
-            'href' => 'igniter/mealplan/mealplanorder/create',
-        ],
     ],
 ];
 
 $config['list']['bulkActions'] = [
-    'status' => [
-        'label' => 'lang:admin::lang.label_status',
-        'type' => 'dropdown',
-        'class' => 'btn btn-light',
-        'statusColumn' => 'status',
-        'menuItems' => [
-            'enable' => [
-                'label' => 'lang:igniter.local::default.reviews.text_approved',
-                'type' => 'button',
-                'class' => 'dropdown-item',
-            ],
-            'disable' => [
-                'label' => 'lang:igniter.local::default.reviews.text_pending_review',
-                'type' => 'button',
-                'class' => 'dropdown-item text-danger',
-            ],
-        ],
-    ],
     'delete' => [
         'label' => 'lang:admin::lang.button_delete',
         'class' => 'btn btn-light text-danger',
         'data-request-confirm' => 'lang:admin::lang.alert_warning_confirm',
+        'permissions' => 'Admin.DeleteOrders',
     ],
 ];
 
@@ -60,23 +74,100 @@ $config['list']['columns'] = [
         'iconCssClass' => 'fa fa-pencil',
         'attributes' => [
             'class' => 'btn btn-edit',
-            'href' => 'igniter/mealplan/mealplan/edit/{id}',
+            'href' => 'igniter/mealplan/mealplanorders/edit/{id}',
         ],
     ],
-    'name' => [
-        'label' => 'Plan Name',
-        'searchable' => true
+    'id' => [
+        'label' => 'lang:admin::lang.column_id',
+        'searchable' => true,
     ],
-    'status' => [
-        'label' => 'lang:admin::lang.label_status',
+    'location_name' => [
+        'label' => 'lang:admin::lang.orders.column_location',
+        'relation' => 'location',
+        'select' => 'location_name',
+        'searchable' => true,
+        'locationAware' => true,
+    ],
+    'full_name' => [
+        'label' => 'lang:admin::lang.orders.column_customer_name',
+        'select' => "concat(first_name, ' ', last_name)",
+        'searchable' => true,
+    ],
+    'order_type_name' => [
+        'label' => 'lang:admin::lang.label_type',
+        'type' => 'text',
+        'sortable' => false,
+    ],
+    'order_time_is_asap' => [
+        'label' => 'lang:admin::lang.orders.label_time_is_asap',
         'type' => 'switch',
-        'onText' => 'lang:igniter.local::default.reviews.text_approved',
-        'offText' => 'lang:igniter.local::default.reviews.text_pending_review',
+        'cssClass' => 'text-center',
+        'onText' => 'lang:admin::lang.text_yes',
+        'offText' => 'lang:admin::lang.text_no',
+    ],
+    'order_time' => [
+        'label' => 'lang:admin::lang.orders.column_time',
+        'type' => 'time',
+    ],
+    'order_date' => [
+        'label' => 'lang:admin::lang.orders.column_date',
+        'type' => 'date',
+        'searchable' => true,
+    ],
+    'status_name' => [
+        'label' => 'lang:admin::lang.label_status',
+        'relation' => 'status',
+        'select' => 'status_name',
+        'type' => 'partial',
+        'path' => 'statuses/form/status_column',
+    ],
+    'payment' => [
+        'label' => 'lang:admin::lang.orders.column_payment',
+        'type' => 'text',
+        'sortable' => false,
+        'relation' => 'payment_method',
+        'select' => 'name',
+    ],
+    'assignee_name' => [
+        'label' => 'lang:admin::lang.orders.column_assignee',
+        'type' => 'text',
+        'relation' => 'assignee',
+        'select' => 'staff_name',
+        'searchable' => true,
+        'invisible' => true,
+    ],
+    'assignee_group_name' => [
+        'label' => 'lang:admin::lang.orders.column_assignee_group',
+        'type' => 'text',
+        'relation' => 'assignee_group',
+        'select' => 'staff_group_name',
+        'searchable' => true,
+        'invisible' => true,
+    ],
+    'order_total' => [
+        'label' => 'lang:admin::lang.orders.column_total',
+        'type' => 'currency',
+    ],
+    'telephone' => [
+        'label' => 'lang:admin::lang.customers.label_telephone',
+        'searchable' => true,
+        'invisible' => true,
+    ],
+    'email' => [
+        'label' => 'lang:admin::lang.label_email',
+        'searchable' => true,
+        'invisible' => true,
+    ],
+    'updated_at' => [
+        'label' => 'lang:admin::lang.column_date_updated',
+        'type' => 'datesince',
+        'invisible' => true,
     ],
     'created_at' => [
         'label' => 'lang:admin::lang.column_date_added',
-        'type' => 'timetense',
-    ]
+        'type' => 'timesince',
+        'invisible' => true,
+    ],
 ];
 
 $config['form']['toolbar'] = [
@@ -84,12 +175,13 @@ $config['form']['toolbar'] = [
         'back' => [
             'label' => 'lang:admin::lang.button_icon_back',
             'class' => 'btn btn-outline-secondary',
-            'href' => 'igniter/mealplan/reviews',
+            'href' => 'orders',
         ],
         'save' => [
             'label' => 'lang:admin::lang.button_save',
-            'context' => ['create', 'edit'],
+            'context' => ['create'],
             'partial' => 'form/toolbar_save_button',
+            'saveActions' => ['continue', 'close'],
             'class' => 'btn btn-primary',
             'data-request' => 'onSave',
             'data-progress-indicator' => 'admin::lang.text_saving',
@@ -103,92 +195,88 @@ $config['form']['toolbar'] = [
             'data-progress-indicator' => 'admin::lang.text_deleting',
             'context' => ['edit'],
         ],
-    ]
+    ],
 ];
 
+$config['form']['fields'] = [
+    '_info' => [
+        'type' => 'partial',
+        'disabled' => true,
+        'path' => 'orders/form/info',
+        'span' => 'left',
+        'cssClass' => 'left',
+        'context' => ['edit', 'preview'],
+    ],
+    'status_id' => [
+        'type' => 'statuseditor',
+        'span' => 'right',
+        'form' => 'order_status_model',
+        'request' => 'Admin\Requests\OrderStatus',
+    ],
+];
 
 $config['form']['tabs'] = [
-    'defaultTab' => 'lang:admin::lang.menus.text_tab_general',
+    'defaultTab' => 'lang:admin::lang.orders.text_tab_general',
     'fields' => [
-        'name' => [
-            'label' => 'lang:admin::lang.label_name',
-            'type' => 'text',
-            'span' => 'left',
+        'order_menus' => [
+            'type' => 'partial',
+            'path' => 'orders/form/order_menus',
         ],
-        'price' => [
-            'label' => 'lang:admin::lang.menus.label_price',
-            'type' => 'currency',
-            'span' => 'right',
-            'cssClass' => 'flex-width',
+        'customer' => [
+            'label' => 'lang:admin::lang.orders.text_customer',
+            'type' => 'partial',
+            'path' => 'orders/form/field_customer',
         ],
-        'discount' => [
-            'label' => 'discount',
-            'type' => 'currency',
-            'span' => 'right',
-            'default' => 0.00,
-            'cssClass' => 'flex-width',
+        'location' => [
+            'label' => 'lang:admin::lang.orders.text_restaurant',
+            'type' => 'partial',
+            'path' => 'orders/form/field_location',
         ],
-        'description' => [
-            'label' => 'Description',
-            'type' => 'textarea',
-            'span' => 'left',
-            'attributes' => [
-                'rows' => 5,
-            ],
+        'order_details' => [
+            'type' => 'partial',
+            'path' => 'orders/form/order_details',
         ],
-        'short_description' => [
-            'label' => 'Short description',
-            'type' => 'textarea',
-            'span' => 'right',
-            'attributes' => [
-                'rows' => 5,
-            ],
-        ],
-        'thumb' => [
-            'label' => 'lang:admin::lang.menus.label_image',
-            'type' => 'mediafinder',
-            'comment' => 'lang:admin::lang.menus.help_image',
-            'span' => 'left',
-            'useAttachment' => true,
-        ],
-        'status' => [
-            'label' => 'lang:admin::lang.label_status',
-            'type' => 'switch',
-            'default' => 1,
-            'span' => 'right',
-        ],
-        '_options' => [
-            'label' => 'Addon List',
-            'tab' => 'lang:admin::lang.menus.text_tab_menu_option',
-            'type' => 'recordeditor',
-            'context' => ['edit', 'preview'],
-            'form' => 'mealplanoption',
-            'modelClass' => 'Igniter\MealPlan\Models\MealPlanOption',
-            'placeholder' => 'lang:admin::lang.menus.help_menu_option',
-            'formName' => 'lang:admin::lang.menu_options.text_option',
-            'popupSize' => 'modal-xl',
-            'addonRight' => [
-                'label' => '<i class="fa fa-long-arrow-down"></i> Add to Menu',
-                'tag' => 'button',
-                'attributes' => [
-                    'class' => 'btn btn-default',
-                    'data-control' => 'choose-record',
-                    'data-request' => 'onChooseMenuOption',
+
+        'status_history' => [
+            'tab' => 'lang:admin::lang.orders.text_status_history',
+            'type' => 'datatable',
+            'useAjax' => true,
+            'defaultSort' => ['status_history_id', 'desc'],
+            'columns' => [
+                'date_added_since' => [
+                    'title' => 'lang:admin::lang.orders.column_time_date',
+                ],
+                'status_name' => [
+                    'title' => 'lang:admin::lang.label_status',
+                ],
+                'comment' => [
+                    'title' => 'lang:admin::lang.orders.column_comment',
+                ],
+                'notified' => [
+                    'title' => 'lang:admin::lang.orders.column_notify',
+                ],
+                'staff_name' => [
+                    'title' => 'lang:admin::lang.orders.column_staff',
                 ],
             ],
         ],
-        'mealplan_addon' => [
-            'label' => 'MealPlan Addons',
-            'tab' => 'lang:admin::lang.menus.text_tab_menu_option',
-            'type' => 'connector',
-            'partial' => 'form/mealplan_addons',
-            'nameFrom' => 'mealplan_addon',
-            'formName' => 'lang:admin::lang.menu_options.text_form_name',
-            'form' => 'mealplanaddon',
-            'popupSize' => 'modal-lg',
-            'sortable' => true,
-            'context' => ['edit', 'preview'],
-        ]
+        'payment_logs' => [
+            'tab' => 'lang:admin::lang.orders.text_payment_logs',
+            'type' => 'datatable',
+            'useAjax' => true,
+            'defaultSort' => ['payment_log_id', 'desc'],
+            'columns' => [
+                'date_added_since' => [
+                    'title' => 'lang:admin::lang.orders.column_time_date',
+                ],
+                'payment_name' => [
+                    'title' => 'lang:admin::lang.orders.label_payment_method',
+                ],
+                'message' => [
+                    'title' => 'lang:admin::lang.orders.column_comment',
+                ],
+            ],
+        ],
     ],
 ];
 

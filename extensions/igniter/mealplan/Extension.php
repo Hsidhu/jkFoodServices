@@ -127,8 +127,8 @@ class Extension extends BaseExtension
                     'meal_plan_orders' => [
                         'priority' => 10,
                         'class' => 'meal_plan_orders',
-                        'href' => admin_url('igniter/mealplan/mealplanorder'),
-                        'title' => 'mealPlan Orders',
+                        'href' => admin_url('igniter/mealplan/mealplanorders'),
+                        'title' => 'MealPlan Orders',
                        // 'permission' => 'Admin.MealPlan',
                     ],
                 ],

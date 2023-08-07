@@ -1,6 +1,6 @@
 <?php 
 /* /Users/harrysingh/projects/mytasty/themes/tastyigniter-orange/_layouts/default.blade.php */
-class Pagic64b9ef8cbb776090562138_bbbdd38ec2c6c4b261a25de85a254473Class extends \Main\Template\Code\LayoutCode
+class Pagic64cdc50abb07c404143467_9aa4f04a0cde31a420d21fd4f6e371e2Class extends \Main\Template\Code\LayoutCode
 {
 
 }

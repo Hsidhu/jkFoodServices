@@ -6,6 +6,7 @@ use Admin\Traits\Assignable;
 use Admin\Traits\HasInvoice;
 use Admin\Traits\Locationable;
 use Admin\Traits\LogsStatusHistory;
+use Igniter\MealPlan\Models\MealPlanPaymentLog;
 use Igniter\MealPlan\Traits\ManagesOrderItems;
 use Carbon\Carbon;
 use Igniter\Flame\Auth\Models\User;
@@ -66,12 +67,12 @@ class MealPlanOrder extends Model
             'payment_method' => ['Admin\Models\Payments_model', 'foreignKey' => 'payment', 'otherKey' => 'code'],
         ],
         'hasMany' => [
-            'payment_logs' => 'Admin\Models\Payment_logs_model',
+            'payment_logs' => 'Igniter\MealPlan\Models\MealPlanPaymentLogs',
         ],
     ];
 
     public static $allowedSortingColumns = [
-        'order_id asc', 'order_id desc',
+        'id asc', 'id desc',
         'created_at asc', 'created_at desc',
     ];
 
@@ -281,12 +282,14 @@ class MealPlanOrder extends Model
     public function markAsPaymentProcessed()
     {
         if (!$this->processed) {
-            $this->fireSystemEvent('admin.order.beforePaymentProcessed');
+            // update stock
+            //$this->fireSystemEvent('admin.order.beforePaymentProcessed');
 
             $this->processed = 1;
             $this->save();
 
-            $this->fireSystemEvent('admin.order.paymentProcessed');
+            // create log and send emails
+            //$this->fireSystemEvent('admin.order.paymentProcessed');
         }
 
         return $this->processed;
@@ -294,7 +297,7 @@ class MealPlanOrder extends Model
 
     public function logPaymentAttempt($message, $isSuccess, $request = [], $response = [], $isRefundable = false)
     {
-        Payment_logs_model::logAttempt($this, $message, $isSuccess, $request, $response, $isRefundable);
+        MealPlanPaymentLog::logAttempt($this, $message, $isSuccess, $request, $response, $isRefundable);
     }
 
     public function updateOrderStatus($id, $options = [])

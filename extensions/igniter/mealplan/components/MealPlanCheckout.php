@@ -273,7 +273,7 @@ class MealPlanCheckout extends BaseComponent
                 return $redirect;
         }, function (Exception $ex) {
             flash()->warning($ex->getMessage())->important();
-
+            var_dump('error');
             return Redirect::back()->withInput();
         });
     }
@@ -338,6 +338,7 @@ class MealPlanCheckout extends BaseComponent
     {
         $this->cartManager->validateContents();
 
+        // allow guest orders
         //$this->orderManager->validateCustomer(Auth::getUser());
 
         $this->cartManager->validateLocation();

@@ -92,5 +92,8 @@ function fillInAddress() {
 window.initAutocomplete = initAutocomplete;
 
 $(document).ready(function(){
-    document.querySelector("#search-query").addEventListener("keydown", initAutocomplete);
+    var searchLocationField = document.querySelector("#search-query");
+    if(searchLocationField){
+        searchLocationField.addEventListener("keydown", initAutocomplete);
+    }
 });

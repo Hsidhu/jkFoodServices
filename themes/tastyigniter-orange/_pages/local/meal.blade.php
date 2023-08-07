@@ -1,6 +1,6 @@
 ---
 title: 'main::lang.local.menus.title'
-permalink: '/:location?local/meal'
+permalink: '/:location?local/mealplan'
 description: ''
 layout: mealplanlayout
 

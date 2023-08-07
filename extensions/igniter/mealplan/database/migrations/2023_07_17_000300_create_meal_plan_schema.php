@@ -90,6 +90,7 @@ class CreateMealPlanSchema extends Migration
             $table->dateTime('invoice_date');
             $table->boolean('processed')->nullable();
             $table->text('delivery_comment')->nullable();
+            $table->integer('area_id')->nullable();
             $table->timestamps();
         });
     
@@ -115,6 +116,8 @@ class CreateMealPlanSchema extends Migration
             $table->integer('meal_plan_option_value_id');
             $table->string('order_option_name', 128);
             $table->decimal('order_option_price', 15, 4)->nullable();
+            $table->string('order_option_value_name', 128);
+            $table->decimal('order_option_value_price', 15, 4)->nullable();
             $table->integer('quantity');
         });
         
@@ -164,6 +167,23 @@ class CreateMealPlanSchema extends Migration
             $table->timestamps();
         });
 
+        Schema::create('meal_plan_payment_logs', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+            $table->integer('payment_log_id', true);
+            $table->integer('meal_plan_order_id');
+            $table->string('payment_name', 128);
+            $table->string('message');
+            $table->text('request')->nullable();
+            $table->text('response')->nullable();
+            $table->boolean('status')->default(0);
+            $table->dateTime('date_added')->nullable();
+            $table->dateTime('date_updated')->nullable();
+            $table->string('payment_code');
+            $table->boolean('is_refundable')->default(false);
+            $table->dateTime('refunded_at')->nullable();
+            $table->timestamps();
+        });
+
 
         MealPlanSettings::set([
             'allow_reviews' => setting('allow_mealplan', '1'),
@@ -188,6 +208,8 @@ class CreateMealPlanSchema extends Migration
         Schema::dropIfExists('meal_plan_order_transactions');
         Schema::dropIfExists('driver_zones');
         Schema::dropIfExists('customer_zones');
+        Schema::dropIfExists('meal_plan_payment_logs');
+        
     }
 
     protected function seedCoupons()

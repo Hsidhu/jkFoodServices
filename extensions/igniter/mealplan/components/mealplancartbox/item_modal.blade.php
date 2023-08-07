@@ -22,7 +22,7 @@
                               'width' => $cartItemThumbWidth,
                               'height' => $cartItemThumbHeight,
                             ]) !!}"
-                        alt="{{ $menuItem->name() }}"
+                        alt="{{ $menuItem->getBuyableName() }}"
                     />
                 </div>
             @endif
