@@ -67,7 +67,7 @@ class MealPlanOrder extends Model
             'payment_method' => ['Admin\Models\Payments_model', 'foreignKey' => 'payment', 'otherKey' => 'code'],
         ],
         'hasMany' => [
-            'payment_logs' => 'Igniter\MealPlan\Models\MealPlanPaymentLogs',
+            'payment_logs' => 'Igniter\MealPlan\Models\MealPlanPaymentLog',
         ],
     ];
 

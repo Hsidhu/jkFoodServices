@@ -69,20 +69,20 @@ trait ManagesOrderItems
     {
         $orderMenuOptions = $this->getOrderMenuOptions();
 
-        $menuItemOptionsIds = $orderMenuOptions->collapse()->pluck('order_menu_option_id')->unique();
+        $menuItemOptionsIds = $orderMenuOptions->collapse()->pluck('meal_plan_order_option_id')->unique();
 
-        $menuItemOptions = Menu_item_options_model::with('option')
-            ->whereIn('menu_option_id', $menuItemOptionsIds)
-            ->get()->keyBy('menu_option_id');
+        $menuItemOptions = MealPlanOption::with('meal_plan_option_values')
+            ->whereIn('id', $menuItemOptionsIds)
+            ->get()->keyBy('id');
 
         return $this->getOrderMenus()->map(function ($menu) use ($orderMenuOptions, $menuItemOptions) {
             unset($menu->option_values);
-            $menuOptions = $orderMenuOptions->get($menu->order_menu_id) ?: [];
+            $menuOptions = $orderMenuOptions->get($menu->id) ?: [];
 
             $menu->menu_options = collect($menuOptions)
                 ->map(function ($menuOption) use ($menuItemOptions) {
                     $menuOption->order_option_category = optional($menuItemOptions->get(
-                        $menuOption->order_menu_option_id
+                        $menuOption->meal_plan_order_option_id
                     ))->option_name;
 
                     return $menuOption;

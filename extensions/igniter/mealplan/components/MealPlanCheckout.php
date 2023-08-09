@@ -50,7 +50,7 @@ class MealPlanCheckout extends BaseComponent
             'isMultiStepCheckout' => [
                 'label' => 'Whether to use a multi step checkout',
                 'type' => 'switch',
-                'default' => false,
+                'default' => true,
                 'validationRule' => 'required|boolean',
             ],
             'showAddress2Field' => [
@@ -147,6 +147,7 @@ class MealPlanCheckout extends BaseComponent
         if ($redirect = $this->isOrderMarkedAsProcessed())
             return $redirect;
 
+            // redirect back to menupage
         if ($this->checkCheckoutSecurity())
             return Redirect::to(restaurant_url($this->property('menusPage')));
 
@@ -164,7 +165,9 @@ class MealPlanCheckout extends BaseComponent
 
     protected function prepareVars()
     {
+        // if payment should be done as well or in next step
         $this->page['isMultiStepCheckout'] = (bool)$this->property('isMultiStepCheckout', false);
+        
         $this->page['showCountryField'] = (bool)$this->property('showCountryField', 1);
         $this->page['showPostcodeField'] = (bool)$this->property('showPostcodeField', 1);
         $this->page['showAddress2Field'] = (bool)$this->property('showAddress2Field', 1);

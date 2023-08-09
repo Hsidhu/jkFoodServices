@@ -266,13 +266,13 @@ class MealPlanCartBox extends \System\Classes\BaseComponent
         try {
             if (!is_numeric($id = post('locationId')) || !($location = Location::getById($id)) || !$location->location_status)
                 throw new ApplicationException(lang('igniter.local::default.alert_location_required'));
-
-                //dd(Location::coveredArea()->area_id == 1, empty(Location::coveredArea()->area_id));
-            //if($this->location->getOrderType()->getCode() == 'delivery' && empty(Location::coveredArea()->area_id))
-                //throw new ApplicationException("Please enter delivery address!");
+                
+            if(Location::orderTypeIsDelivery() && empty($this->location->getSession('area')))
+                throw new ApplicationException("Please enter delivery address!");
 
             Location::setCurrent($location);
 
+            // move to checkout page
             $redirectUrl = $this->controller->pageUrl($this->property('checkoutPage'));
 
             return Redirect::to($redirectUrl);
@@ -287,7 +287,7 @@ class MealPlanCartBox extends \System\Classes\BaseComponent
     public function buttonLabel($checkoutComponent = null)
     {   
         if($this->location->getOrderType()->getCode() == 'delivery' && empty(Location::coveredArea()->area_id)){
-            //return "Delivery area required";
+           // return "Address required for delivery option";
         }
         
         if (!$this->property('pageIsCheckout') && $this->cartManager->getCart()->count())

@@ -25,7 +25,7 @@ class Slider extends \System\Classes\BaseComponent
                 'label' => 'lang:igniter.frontend::default.banners.label_height',
                 'span' => 'left',
                 'type' => 'text',
-                'default' => '60vh',
+                'default' => '90vh',
                 'validationRule' => 'string',
             ],
             'effect' => [

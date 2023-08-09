@@ -133,4 +133,5 @@
   'Igniter\\Automation\\Models\\AutomationRule' => 'extensions/igniter/automation/models/AutomationRule.php',
   'Igniter\\User\\Components\\AddressBook' => 'extensions/igniter/user/components/AddressBook.php',
   'Igniter\\MealPlan\\Models\\MealPlanPaymentLog' => 'extensions/igniter/mealplan/models/MealPlanPaymentLog.php',
+  'igniter\\frontend\\Controllers\\sliders' => 'extensions/igniter/frontend/controllers/sliders.php',
 );
