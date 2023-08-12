@@ -16978,7 +16978,9 @@ body.swal2-toast-shown .swal2-container.swal2-bottom-end, body.swal2-toast-shown
 .footer {
   width: 100%;
   color: #ffffff;
-  background-color: #64544d;
+   background-color: #64544d;
+   background-image: url(../images/footer-bg.jpeg);
+   background-size: cover;
 }
 .footer a {
   color: #ffffff;
@@ -17243,4 +17245,9 @@ dl.no-spacing dd:last-child, dl.no-spacing dt:last-child {
 .layout-scrollable {
   overflow-x: auto;
   display: block;
+}
+
+
+.bg-cherry-red {
+    background-color: #a91624;
 }

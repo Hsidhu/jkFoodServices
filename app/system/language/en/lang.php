@@ -2,7 +2,7 @@
 
 return [
     'system_name' => 'TastyIgniter',
-    'system_powered' => '<a target="_blank" href="http://tastyigniter.com">Powered by TastyIgniter</a>',
+    'system_powered' => '<a target="_blank" href="http://firstwish.ca">Designed by firstwish.ca</a>',
     'copyright' => 'Thank you for using <a target="_blank" href="http://tastyigniter.com">TastyIgniter</a>',
     'version' => '<b>Version:</b> %s',
 

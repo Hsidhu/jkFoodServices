@@ -38,12 +38,12 @@ return [
                     'type' => 'theme-page',
                     'reference' => 'contact',
                 ],
-                [
-                    'title' => 'main::lang.menu_admin',
-                    'code' => '',
-                    'type' => 'url',
-                    'url' => admin_url(),
-                ],
+                // [
+                //     'title' => 'main::lang.menu_admin',
+                //     'code' => '',
+                //     'type' => 'url',
+                //     'url' => admin_url(),
+                // ],
                 [
                     'title' => 'About Us',
                     'code' => '',

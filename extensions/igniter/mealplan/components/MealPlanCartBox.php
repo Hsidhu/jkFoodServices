@@ -154,8 +154,8 @@ class MealPlanCartBox extends \System\Classes\BaseComponent
 
         $this->page['cart'] = $this->cartManager->getCart();
 
-        //$this->cartManager->removeCondition('delivery');
-        //dd($this->cartManager->getCart());
+        // need to add address to cart
+        // Location::getSession('searchQuery')
     }
 
     public function fetchPartials()
