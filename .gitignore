@@ -2,11 +2,11 @@
 /node_modules
 #/public/storage
 /storage/*.key
-/storage/framework/cache
-/storage/framework/sessions
-/storage/framework/views
-/storage/system
-/storage/logs
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/views/*
+/storage/system/*
+/storage/logs/*
 #/vendor
 /.idea
 /.vagrant

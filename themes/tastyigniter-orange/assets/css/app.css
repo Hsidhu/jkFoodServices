@@ -17251,3 +17251,7 @@ dl.no-spacing dd:last-child, dl.no-spacing dt:last-child {
 .bg-cherry-red {
     background-color: #a91624;
 }
+
+#eu-cookie-message > span{
+    color:#ffffff;
+}
