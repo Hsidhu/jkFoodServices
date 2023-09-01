@@ -6,11 +6,12 @@
 ]) !!}
 
 @if ($__SELF__->checkoutStep !== 'pay')
+
     @partial('@customer_fields')
 
-    @if ($order->isDeliveryType())
+    <!-- @if ($order->isDeliveryType()) -->
         @partial('@address_fields')
-    @endif
+    <!-- @endif -->
 
     <div class="form-group">
         <label for="comment">@lang('igniter.cart::default.checkout.label_comment')</label>

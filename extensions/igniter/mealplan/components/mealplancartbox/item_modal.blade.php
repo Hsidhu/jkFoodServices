@@ -43,14 +43,14 @@
                     @partial('@item_options')
                 </div>
 
-                <div class="menu-comment">
+                <!-- <div class="menu-comment">
                     <textarea
                         name="comment"
                         class="form-control"
                         rows="2"
                         placeholder="@lang('igniter.cart::default.label_add_comment')"
                     >{{ $cartItem ? $cartItem->comment : null }}</textarea>
-                </div>
+                </div> -->
             </div>
 
             <div class="modal-footer">

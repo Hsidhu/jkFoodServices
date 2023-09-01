@@ -7,9 +7,6 @@ layout: default
 '[slider]':
     code: home-slider
 
-'[localSearch]':
-    hideSearch: 0
-
 '[featuredItems]':
     items: ['6', '7', '8', '9']
     limit: 3
@@ -18,9 +15,6 @@ layout: default
     itemHeight: 300
 ---
 @component('slider')
-
-@component('localSearch')
-
 
 
 <section class="round pt-5 pb-5">
@@ -58,7 +52,10 @@ layout: default
         <div class="row">
             <div class="col-md-12 my-4">
                 <h6 class="text-white text-center">Submit Information Online to Book Your Upcoming Event</h6>
-                <h4 class="font-weight-normal text-white text-center">Or Call us @ <span class="font-weight-bold text-white h3"></span><a class="text-decoration-none text-white" href="mailto:(123) 456 7890">(123) 456 7890</a></h4>
+                <h4 class="font-weight-normal text-white text-center">Or Call us @ 
+                    <span class="font-weight-bold text-white h3"></span>
+                    <a class="text-decoration-none text-white" href="mailto:(123) 456 7890">(123) 456 7890</a>
+                </h4>
             </div>
         </div>
     </div>

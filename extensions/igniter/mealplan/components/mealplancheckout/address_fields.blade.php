@@ -24,7 +24,7 @@
     data-trigger-condition="value[0]"
     data-trigger-closest-parent="form"
     @endif
->
+    >
     <input
         type="hidden"
         name="address[address_id]"

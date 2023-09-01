@@ -98,7 +98,7 @@ class MealPlanCheckout extends BaseComponent
             'telephoneIsRequired' => [
                 'label' => 'Whether the telephone field should be required',
                 'type' => 'switch',
-                'default' => false,
+                'default' => true,
                 'validationRule' => 'required|boolean',
             ],
             'agreeTermsPage' => [
@@ -254,6 +254,7 @@ class MealPlanCheckout extends BaseComponent
         $data = $this->processDeliveryAddress($data);
 
         // check content and location validation
+        // also save the order
         $this->validateCheckoutSecurity();
 
         return rescue(function () use ($data) {
@@ -349,6 +350,7 @@ class MealPlanCheckout extends BaseComponent
         //$this->cartManager->validateOrderTime();
     }
 
+    // check unique email and delivery area
     protected function validateCheckout($data, $order)
     {
         $this->validate($data, $this->createRules(), [
@@ -417,7 +419,9 @@ class MealPlanCheckout extends BaseComponent
 
         return Redirect::to($redirectUrl);
     }
-
+    /**
+     * Find order delivery address
+     */
     protected function processDeliveryAddress($data)
     {
         $addressId = array_get($data, 'address_id');

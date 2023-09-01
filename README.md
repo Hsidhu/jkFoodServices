@@ -35,3 +35,6 @@ Starting with version 3.0.0 TastyIgniter is licensed under the [The MIT License 
 curl -X POST --data "username=admin&password=123456789&device_name=my_device" http://mytasty.local/api/token
 {"status_code":201,"token":"1|jw1qy04xYH90nNHaDFOJOkiMjuGFzujGBO46EuKzAD3cUtuIbtsbFlabBjDUeAh6TqKye8AHV6WhHZhQ"}
 
+
+
+sed -E "s/(X'[^,\)]*')/CONVERT(\1 using utf8mb4)/g" mytasty_2023-08-12.sql > outfile.sql
